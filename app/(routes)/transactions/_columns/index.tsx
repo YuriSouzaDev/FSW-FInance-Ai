@@ -1,30 +1,14 @@
 'use client';
 
+import { Button } from '@/app/_components/ui/button';
+import {
+  TRANSACTION_CATEGORIES_LABELS,
+  TRANSACTIONS_PAYMENT_METHODS_LABELS,
+} from '@/app/_constants/transactions';
 import { Transaction } from '@prisma/client';
 import { ColumnDef } from '@tanstack/react-table';
+import { PencilIcon, TrashIcon } from 'lucide-react';
 import TransactionTypeBadge from '../_components/type-badge';
-
-export const TRANSACTION_CATEGORIES_LABELS = {
-  HOUSING: 'Moradia',
-  TRANSPORTATION: 'Transporte',
-  FOOD: 'Alimentação',
-  ENTERTAINMENT: 'Entretramento',
-  HEALTH: 'Saúde',
-  UTILITY: 'Utilidade',
-  SALARY: 'Salário',
-  EDUCATION: 'Educação',
-  OTHER: 'Outros',
-};
-
-export const TRANSACTIONS_PAYMENT_METHODS_LABELS = {
-  CREDIT_CARD: 'Cartão de Crédito',
-  DEBIT_CARD: 'Cartão de Débito',
-  BANK_TRANSFER: 'Transferência Bancária',
-  BANK_SLIP: 'Boleto',
-  CASH: 'Dinheiro',
-  PIX: 'Pix',
-  OTHER: 'Outros',
-};
 
 export const transationsColumns: ColumnDef<Transaction>[] = [
   {
@@ -76,5 +60,17 @@ export const transationsColumns: ColumnDef<Transaction>[] = [
   {
     accessorKey: 'actions',
     header: '',
+    cell: () => {
+      return (
+        <div className="space-x-1">
+          <Button variant="ghost" size="icon" className="text-muted-foreground">
+            <PencilIcon />
+          </Button>
+          <Button variant="ghost" size="icon" className="text-muted-foreground">
+            <TrashIcon />
+          </Button>
+        </div>
+      );
+    },
   },
 ];
