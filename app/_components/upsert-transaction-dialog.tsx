@@ -8,7 +8,7 @@ import {
 } from '@prisma/client';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { upsertTransaction } from '../_actions/add-transactions';
+import { upsertTransaction } from '../_actions/upsert-transactions';
 import {
   TRANSACTION_CATEGORY_OPTIONS,
   TRANSACTION_PAYMENT_METHOD_OPTIONS,
