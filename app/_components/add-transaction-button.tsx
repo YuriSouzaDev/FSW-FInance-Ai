@@ -7,8 +7,10 @@ import {
   TransactionType,
 } from '@prisma/client';
 import { ArrowDownUpIcon } from 'lucide-react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { addTransactions } from '../_actions/add-transactions';
 import {
   TRANSACTION_CATEGORY_OPTIONS,
   TRANSACTION_PAYMENT_METHOD_OPTIONS,
@@ -46,7 +48,9 @@ import {
 
 const formSchema = z.object({
   name: z.string().trim().min(1, { message: 'O nome é obrigatório' }),
-  amount: z.string().trim().min(1, { message: 'O valor é obrigatório' }),
+  amount: z
+    .number({ required_error: 'O valor é obrigatório' })
+    .positive('O valor deve ser positivo'),
   type: z.nativeEnum(TransactionType, {
     required_error: 'O tipo é obrigatório',
   }),
@@ -62,11 +66,12 @@ const formSchema = z.object({
 type formSchema = z.infer<typeof formSchema>;
 
 const AddTransactionButton = () => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const form = useForm<formSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
-      amount: '',
+      amount: 0,
       type: TransactionType.DEPOSIT,
       category: TransactionCategory.OTHER,
       paymentMethod: TransactionPaymentMethod.OTHER,
@@ -74,13 +79,21 @@ const AddTransactionButton = () => {
     },
   });
 
-  const onSubmit = (data: formSchema) => {
-    console.log(data);
+  const onSubmit = async (data: formSchema) => {
+    try {
+      await addTransactions(data);
+      setIsDialogOpen(false);
+      form.reset();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <Dialog
+      open={isDialogOpen}
       onOpenChange={(open) => {
+        setIsDialogOpen(open);
         if (!open) form.reset();
       }}
     >
@@ -119,7 +132,15 @@ const AddTransactionButton = () => {
                 <FormItem>
                   <FormLabel>Nome</FormLabel>
                   <FormControl>
-                    <MoneyInput placeholder="Digite o valor..." {...field} />
+                    <MoneyInput
+                      placeholder="Digite o valor..."
+                      onValueChange={({ floatValue }) =>
+                        field.onChange(floatValue)
+                      }
+                      onBlur={field.onBlur}
+                      disabled={field.disabled}
+                      value={field.value}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
