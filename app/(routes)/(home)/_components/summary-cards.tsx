@@ -4,65 +4,47 @@ import {
   TrendingUpIcon,
   WalletIcon,
 } from 'lucide-react';
-import SummaryCard from './sumary-card';
+import SummaryCard from './summary-card';
 
-interface SummaryCardsProps {
+interface SummaryCards {
+  month: string;
   balance: number;
   depositsTotal: number;
-  investimentsTotal: number;
+  investmentsTotal: number;
   expensesTotal: number;
 }
 
 const SummaryCards = async ({
   balance,
   depositsTotal,
-  investimentsTotal,
   expensesTotal,
-}: SummaryCardsProps) => {
+  investmentsTotal,
+}: SummaryCards) => {
   return (
     <div className="space-y-6">
       {/* PRIMEIRO CARD */}
+
       <SummaryCard
-        icon={
-          <WalletIcon
-            size={16}
-            className="text-white p-[10px] bg-foreground/10 rounded-[8.53px] h-9 w-9"
-          />
-        }
-        size="large"
+        icon={<WalletIcon size={16} />}
         title="Saldo"
         amount={balance}
+        size="large"
       />
 
-      {/* OUTROS CARD */}
-      <div className="grid grid-cols-3">
+      {/* OUTROS CARDS */}
+      <div className="grid grid-cols-3 gap-6">
         <SummaryCard
-          icon={
-            <PiggyBankIcon
-              size={16}
-              className="text-white p-[10px] bg-white/10 rounded-[8.53px] h-9 w-9"
-            />
-          }
+          icon={<PiggyBankIcon size={16} />}
           title="Investido"
-          amount={investimentsTotal}
+          amount={investmentsTotal}
         />
         <SummaryCard
-          icon={
-            <TrendingUpIcon
-              size={16}
-              className="text-primary p-[10px] bg-primary/10 rounded-[8.53px] h-9 w-9"
-            />
-          }
+          icon={<TrendingUpIcon size={16} className="text-primary" />}
           title="Receita"
           amount={depositsTotal}
         />
         <SummaryCard
-          icon={
-            <TrendingDownIcon
-              size={16}
-              className="text-danger p-[10px] bg-danger/10 rounded-[8.53px] h-9 w-9"
-            />
-          }
+          icon={<TrendingDownIcon size={16} className="text-red-500" />}
           title="Despesas"
           amount={expensesTotal}
         />

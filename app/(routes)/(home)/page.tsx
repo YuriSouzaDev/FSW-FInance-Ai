@@ -30,7 +30,7 @@ const Home = async ({ searchParams: { month } }: HomeProps) => {
       </div>
       <div className="grid grid-cols-[2fr,1fr] gap-10">
         <div>
-          <SummaryCards {...dashboard} />
+          <SummaryCards month={month} {...dashboard} />
           <div className="grid grid-cols-3 grid-rows-1 gap-6">
             <TransactionsPieChart {...dashboard} />
           </div>
