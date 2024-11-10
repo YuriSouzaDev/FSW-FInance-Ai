@@ -2,6 +2,7 @@ import { getDashboard } from '@/app/_data/get-dashboard';
 import { auth } from '@clerk/nextjs/server';
 import { isMatch } from 'date-fns';
 import { redirect } from 'next/navigation';
+import ExpensesPerCategory from './_components/expenses-per-category';
 import MonthSelect from './_components/month-select';
 import SummaryCards from './_components/summary-cards';
 import TransactionsPieChart from './_components/transactions-pie-chart';
@@ -33,6 +34,9 @@ const Home = async ({ searchParams: { month } }: HomeProps) => {
           <SummaryCards month={month} {...dashboard} />
           <div className="grid grid-cols-3 grid-rows-1 gap-6">
             <TransactionsPieChart {...dashboard} />
+            <ExpensesPerCategory
+              expensesPerCategory={dashboard.totalExpensePerCategory}
+            />
           </div>
         </div>
       </div>
