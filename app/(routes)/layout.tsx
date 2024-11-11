@@ -4,8 +4,10 @@ import Navbar from '../_components/navbar';
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div>
-      <Navbar />
-      {children}
+      <div className="flex h-full flex-col overflow-hidden">
+        <Navbar />
+        {children}
+      </div>
     </div>
   );
 };

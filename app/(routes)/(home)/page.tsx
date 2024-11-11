@@ -9,7 +9,9 @@ import SummaryCards from './_components/summary-cards';
 import TransactionsPieChart from './_components/transactions-pie-chart';
 
 interface HomeProps {
-  searchParams: { month: string };
+  searchParams: {
+    month: string;
+  };
 }
 
 const Home = async ({ searchParams: { month } }: HomeProps) => {
@@ -17,32 +19,32 @@ const Home = async ({ searchParams: { month } }: HomeProps) => {
   if (!userId) {
     redirect('/login');
   }
-
-  const monthIsValid = !month || !isMatch(month, 'MM');
-  if (monthIsValid) {
-    redirect('?month=01');
+  const monthIsInvalid = !month || !isMatch(month, 'MM');
+  if (monthIsInvalid) {
+    redirect(`?month=${new Date().getMonth() + 1}`);
   }
-
   const dashboard = await getDashboard(month);
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <MonthSelect />
-      </div>
-      <div className="grid grid-cols-[2fr,1fr] gap-10">
-        <div className="flex flex-col gap-6">
-          <SummaryCards month={month} {...dashboard} />
-          <div className="grid grid-cols-3 grid-rows-1 gap-6">
-            <TransactionsPieChart {...dashboard} />
-            <ExpensesPerCategory
-              expensesPerCategory={dashboard.totalExpensePerCategory}
-            />
-          </div>
+    <>
+      <div className="flex h-full flex-col space-y-6 overflow-hidden p-6">
+        <div className="flex justify-between">
+          <h1 className="text-2xl font-bold">Dashboard</h1>
+          <MonthSelect />
         </div>
-        <LastTransactions lastTransactions={dashboard.lastTransactions} />
+        <div className="grid h-full grid-cols-[2fr,1fr] gap-6 overflow-hidden">
+          <div className="flex flex-col gap-6 overflow-hidden">
+            <SummaryCards month={month} {...dashboard} />
+            <div className="grid h-full grid-cols-3 grid-rows-1 gap-6 overflow-hidden">
+              <TransactionsPieChart {...dashboard} />
+              <ExpensesPerCategory
+                expensesPerCategory={dashboard.totalExpensePerCategory}
+              />
+            </div>
+          </div>
+          <LastTransactions lastTransactions={dashboard.lastTransactions} />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
