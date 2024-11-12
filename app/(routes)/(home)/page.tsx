@@ -1,8 +1,9 @@
 import { canUserAddTransaction } from '@/app/_data/can-user-add-transaction';
 import { getDashboard } from '@/app/_data/get-dashboard';
-import { auth } from '@clerk/nextjs/server';
+import { auth, clerkClient } from '@clerk/nextjs/server';
 import { isMatch } from 'date-fns';
 import { redirect } from 'next/navigation';
+import AiReportButton from './_components/ai-report-button';
 import ExpensesPerCategory from './_components/expenses-per-category';
 import LastTransactions from './_components/last-transactions';
 import MonthSelect from './_components/month-select';
@@ -25,14 +26,22 @@ const Home = async ({ searchParams: { month } }: HomeProps) => {
     redirect(`?month=${new Date().getMonth() + 1}`);
   }
   const dashboard = await getDashboard(month);
-
   const userCanAddTransaction = await canUserAddTransaction();
+  const user = await clerkClient().users.getUser(userId);
   return (
     <>
       <div className="flex h-full flex-col space-y-6 overflow-hidden p-6">
         <div className="flex justify-between">
           <h1 className="text-2xl font-bold">Dashboard</h1>
-          <MonthSelect />
+          <div className="flex items-center gap-3">
+            <AiReportButton
+              month={month}
+              hasPremiumPlan={
+                user.publicMetadata.subscriptionPlan === 'premium'
+              }
+            />
+            <MonthSelect />
+          </div>
         </div>
         <div className="grid h-full grid-cols-[2fr,1fr] gap-6 overflow-hidden">
           <div className="flex flex-col gap-6 overflow-hidden">
