@@ -12,7 +12,10 @@ const TransactionsPage = async () => {
   if (!userId) {
     redirect('/login');
   }
-  const transactions = await db.transaction.findMany({ where: { userId } });
+  const transactions = await db.transaction.findMany({
+    where: { userId },
+    orderBy: { createdAt: 'desc' },
+  });
   const userCanAddTransaction = await canUserAddTransaction();
   return (
     <div className="p-6 space-y-6 h-full overflow-hidden">
@@ -21,7 +24,10 @@ const TransactionsPage = async () => {
         <AddTransactionButton userCanAddTransaction={userCanAddTransaction} />
       </div>
       <ScrollArea className="h-full">
-        <DataTable columns={transationsColumns} data={transactions} />
+        <DataTable
+          columns={transationsColumns}
+          data={JSON.parse(JSON.stringify(transactions))}
+        />
       </ScrollArea>
     </div>
   );
